@@ -44,12 +44,12 @@ async fn handler(payload: EventPayload) {
         };
     }
 
-    match get_email(&user).await {
-        None => {}
-        Some(email) => {
-            let merged_str = if merged { "merged" } else { "null" };
-            let text = format!("title: {title}\n html_url: {html_url}\n user: {user}\n, email: {email}\n merged: {merged_str}");
-            send_message_to_channel("ik8", "general", text);
-        }
-    }
+    // match get_email(&user).await {
+    //     None => {}
+    //     Some(email) => {
+    let merged_str = if merged { "merged" } else { "null" };
+    let text = format!("title: {title}\n html_url: {html_url}\n user: {user}\n, email: email\n merged: {merged_str}");
+    send_message_to_channel("ik8", "general", text);
+    // }
+    // }
 }
