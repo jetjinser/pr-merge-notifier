@@ -1,0 +1,15 @@
+[package]
+name = "pr-merge-notifier"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/pr-merge-notifier.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+github-flows = "0.2"
+slack-flows = "0.2.5"
+tokio_wasi = { version = "1.25.1", features = ["macros", "rt"] }
+anyhow = "1"
+serde_json = "1"
