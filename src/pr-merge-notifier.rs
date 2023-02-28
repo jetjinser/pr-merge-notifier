@@ -44,6 +44,9 @@ async fn handler(payload: EventPayload) {
         };
     }
 
+    let u = get_email(&user).await.expect("user not obtained");
+    send_message_to_channel("ik8", "general", u);
+
     // match get_email(&user).await {
     //     None => {}
     //     Some(email) => {
