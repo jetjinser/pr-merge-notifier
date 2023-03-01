@@ -11,9 +11,9 @@ pub async fn run() -> anyhow::Result<()> {
 
 async fn get_email(user: &str) -> anyhow::Result<()> {
     let octo = get_octo(None);
-    let query_str = format!("https://api.github.com/users/{user}");
+    let query_str = format!("/users/{user}");
 
-    let response = octo._get(query_str, None::<&()>).await?;
+    let response = octo.get(query_str, None::<&()>).await?;
     let text = format!("{:?}", response);
     send_message_to_channel("ik8", "general", "supposedly done query".to_string());
     send_message_to_channel("ik8", "general", text);
