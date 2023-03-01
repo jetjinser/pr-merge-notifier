@@ -10,21 +10,18 @@ pub async fn run() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn get_email(user: &str) {
+async fn get_email(user: &str) -> anyhow::Result<()> {
     let octo = get_octo(Some("jaykchen".to_string()));
     let query_str = format!("https://api.github.com/users/{user}");
-    send_message_to_channel("ik8", "general", "ready to query".to_string());
 
-    let response: serde_json::Value = octo
+    let response = octo
         ._get(query_str, None::<&()>)
         .await
-        .expect("got no response")
-        .json()
-        .await
-        .expect("failed to parse response to json");
-
-    send_message_to_channel("ik8", "general", response.to_string());
-
+        .expect("got no response");
+    let text = format!("{:?}", response);
+    send_message_to_channel("ik8", "general", "supposedly done query".to_string());
+    send_message_to_channel("ik8", "general", text);
+    Ok(())
     // match response.get("email") {
     //     Some(e) => Some(e.to_string()),
     //     None => None,
