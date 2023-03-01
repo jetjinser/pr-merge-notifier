@@ -1,6 +1,5 @@
 use anyhow::{Error, Result};
 use github_flows::{get_octo, listen_to_event, EventPayload};
-
 use slack_flows::send_message_to_channel;
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
@@ -11,13 +10,10 @@ pub async fn run() -> anyhow::Result<()> {
 }
 
 async fn get_email(user: &str) -> anyhow::Result<()> {
-    let octo = get_octo(Some("jaykchen".to_string()));
+    let octo = get_octo(None);
     let query_str = format!("https://api.github.com/users/{user}");
 
-    let response = octo
-        ._get(query_str, None::<&()>)
-        .await
-        .expect("got no response");
+    let response = octo._get(query_str, None::<&()>).await?;
     let text = format!("{:?}", response);
     send_message_to_channel("ik8", "general", "supposedly done query".to_string());
     send_message_to_channel("ik8", "general", text);
