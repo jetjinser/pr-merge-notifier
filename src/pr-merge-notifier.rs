@@ -7,7 +7,7 @@ use sendgrid_flows::{send_email, Email};
 pub async fn run() -> anyhow::Result<()> {
     let owner: &str = "jaykchen";
     let repo: &str = "vitesse-lite";
-    let sender_email_sendgrid : &str = "jaykchen@gmailcom";
+    let sender_email_sendgrid : &str = "jaykchen@gmail.com";
 
     listen_to_event(owner, repo, vec!["pull_request"], |payload| {
         handler(owner, sender_email_sendgrid, payload)
