@@ -9,7 +9,6 @@ use http_req::{
     uri::Uri,
 };
 use sendgrid_flows::{send_email, Email};
-use slack_flows::send_message_to_channel;
 use std::env;
 
 #[no_mangle]
