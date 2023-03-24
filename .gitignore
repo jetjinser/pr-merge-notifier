@@ -1,8 +1,5 @@
 /target
 .env
 Cargo.lock
-fork.payload.json
-fork_event.json
-payload.json
-src/pr.payload.json
-user.json
+pr.payload.json
+saved_changes.rs
