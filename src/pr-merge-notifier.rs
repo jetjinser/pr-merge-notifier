@@ -14,21 +14,22 @@ use std::env;
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
 pub async fn run() -> anyhow::Result<()> {
+    let login: &str = "jaykchen";
     let owner: &str = "jaykchen";
     let repo: &str = "vitesse-lite";
     let sender_email_sendgrid: &str = "jaykchen@gmail.com";
 
-    listen_to_event(owner, repo, vec!["pull_request"], |payload| {
-        handler(owner, sender_email_sendgrid, payload)
+    listen_to_event(login, owner, repo, vec!["pull_request"], |payload| {
+        handler(login, sender_email_sendgrid, payload)
     })
     .await;
 
     Ok(())
 }
 
-async fn handler(owner: &str, sender_email_sendgrid: &str, payload: EventPayload) {
+async fn handler(login: &str, sender_email_sendgrid: &str, payload: EventPayload) {
     dotenv().ok();
-    let octocrab = get_octo(Some(String::from(owner)));
+    let octocrab = get_octo(Some(String::from(login)));
 
     if let EventPayload::PullRequestEvent(e) = payload {
         if e.action != PullRequestEventAction::Closed {
