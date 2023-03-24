@@ -1,15 +1,12 @@
-use dotenv::dotenv;
 use github_flows::{
     get_octo, listen_to_event,
-    octocrab::{models::events::payload::PullRequestEventAction, models::repos::GitUser},
+    octocrab::{
+        models::events::payload::PullRequestEventAction, models::repos::GitUser,
+        Result as OctoResult,
+    },
     EventPayload,
 };
-use http_req::{
-    request::{Method, Request},
-    uri::Uri,
-};
 use sendgrid_flows::{send_email, Email};
-use std::env;
 
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
@@ -28,7 +25,6 @@ pub async fn run() -> anyhow::Result<()> {
 }
 
 async fn handler(login: &str, sender_email_sendgrid: &str, payload: EventPayload) {
-    dotenv().ok();
     let octocrab = get_octo(Some(String::from(login)));
 
     if let EventPayload::PullRequestEvent(e) = payload {
@@ -40,27 +36,17 @@ async fn handler(login: &str, sender_email_sendgrid: &str, payload: EventPayload
 
         let user = pull.user.expect("no contributor info found");
         let contributor = user.login;
-        let contributor_url = user.url.to_string();
+        let contributor_route = format!("users/{contributor}");
 
         if let Some(_) = pull.merge_commit_sha {
-            let token = env::var("GITHUB_TOKEN").unwrap();
-            let uri = Uri::try_from(contributor_url.as_str()).unwrap();
-
-            let mut writer = Vec::new();
-            Request::new(&uri)
-                .method(Method::GET)
-                .header("Accept", "application/vnd.github+json")
-                .header("User-Agent", "Github Connector of Second State Reactor")
-                .header("Authorization", &format!("Bearer {}", token))
-                .send(&mut writer)
-                .map_err(|_| {})
-                .unwrap();
-
-            let text = String::from_utf8_lossy(&writer);
-
-            let git_user_obj: GitUser = serde_json::from_str(&text).map_err(|_| {}).unwrap();
-
-            let contributor_email = git_user_obj.email;
+            let response: OctoResult<GitUser> = octocrab.get(&contributor_route, None::<&()>).await;
+            let mut contributor_email = "".to_string();
+            match response {
+                Err(_) => {}
+                Ok(user_obj) => {
+                    contributor_email = user_obj.email;
+                }
+            };
 
             let content = format!(
                 r#"
