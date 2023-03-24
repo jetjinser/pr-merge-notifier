@@ -14,7 +14,7 @@ pub async fn run() -> anyhow::Result<()> {
     let login: &str = "jaykchen";
     let owner: &str = "jaykchen";
     let repo: &str = "vitesse-lite";
-    let sender_email_sendgrid: &str = "jaykchen@gmail.com";
+    let sender_email_sendgrid: &str = "xyz@gmail.com";
 
     listen_to_event(login, owner, repo, vec!["pull_request"], |payload| {
         handler(login, sender_email_sendgrid, payload)
