@@ -38,14 +38,11 @@ async fn handler(login: &str, sender_email_sendgrid: &str, payload: EventPayload
         let contributor = user.login;
         let contributor_route = format!("users/{contributor}");
 
-        if let Some(_) = pull.merge_commit_sha {
+        if pull.merge_commit_sha.is_some() || pull.commits_url.is_some() {
             let response: OctoResult<GitUser> = octocrab.get(&contributor_route, None::<&()>).await;
-            let mut contributor_email = "".to_string();
-            match response {
-                Err(_) => {}
-                Ok(user_obj) => {
-                    contributor_email = user_obj.email;
-                }
+            let mut contributor_email = match response {
+                Err(_) => "".to_string(),
+                Ok(user_obj) => user_obj.email,
             };
 
             let content = format!(
