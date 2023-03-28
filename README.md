@@ -2,9 +2,13 @@
 
 [Deploy this function on flows.network](#deploy-pr-merge-notifier-on-your-github-repo), and you will automate the work to get reach out to the contributors. When the Pull Requests is merged by miantianers, send a thank you email to the contributors. 
 
-> This only works when the contributor has a plublic email in his/her profile page.
+> This function works when the contributor has a plublic email in his/her profile page. If the contributor sets email address private, then we can't send him an email.
 
 ![image](https://user-images.githubusercontent.com/45785633/228182641-835276f6-7aa9-48c0-a16b-3ef9cf452d30.png)
+
+## Prerequisite 
+
+You will need a [Sendgrid API key](https://app.sendgrid.com/settings/api_keys). If you do not already have one, [sign up here](https://app.sendgrid.com/settings/api_keys).
 
 
 ## Deploy PR Merge Notifier on your GitHub repo
