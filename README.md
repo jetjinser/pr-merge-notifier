@@ -1,4 +1,17 @@
-# Send the contributor an email when the PR is merged
+# <p align="center">Send the contributor an email when the PR is merged</p>
+
+<p align="center">
+  <a href="https://discord.gg/ccZn9ZMfFf">
+    <img src="https://img.shields.io/badge/chat-Discord-7289DA?logo=discord" alt="flows.network Discord">
+  </a>
+  <a href="https://twitter.com/flows_network">
+    <img src="https://img.shields.io/badge/Twitter-1DA1F2?logo=twitter&amp;logoColor=white" alt="flows.network Twitter">
+  </a>
+   <a href="https://flows.network/flow/new">
+    <img src="https://img.shields.io/website?up_message=deploy&url=https%3A%2F%2Fflows.network%2Fflow%2Fnew" alt="Create a flow">
+  </a>
+</p>
+
 
 [Deploy this function on flows.network](#deploy-pr-merge-notifier-on-your-github-repo), and you will automate the work to get reach out to the contributors. When the Pull Requests is merged by miantianers, send a thank you email to the contributors. 
 
