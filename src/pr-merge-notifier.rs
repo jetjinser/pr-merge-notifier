@@ -1,3 +1,4 @@
+use dotenv::dotenv;
 use github_flows::{
     get_octo, listen_to_event,
     octocrab::{
@@ -5,27 +6,32 @@ use github_flows::{
         Result as OctoResult,
     },
     EventPayload,
+    GithubLogin::Default,
 };
 use sendgrid_flows::{send_email, Email};
+use std::env;
 
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
-pub async fn run() -> anyhow::Result<()> {
-    let login: &str = "jaykchen";
-    let owner: &str = "jaykchen";
-    let repo: &str = "a-test";
-    let sender_email_sendgrid: &str = "jaykchen@gmail.com";
+pub async fn run() {
+    dotenv().ok();
+    let github_owner = env::var("github_owner").unwrap_or("alabulei1".to_string());
+    let github_repo = env::var("github_repo").unwrap_or("a-test".to_string());
 
-    listen_to_event(login, owner, repo, vec!["pull_request"], |payload| {
-        handler(login, sender_email_sendgrid, payload)
-    })
+    listen_to_event(
+        &Default,
+        &github_owner,
+        &github_repo,
+        vec!["pull_request"],
+        handler,
+    )
     .await;
-
-    Ok(())
 }
 
-async fn handler(login: &str, sender_email_sendgrid: &str, payload: EventPayload) {
-    let octocrab = get_octo(Some(String::from(login)));
+async fn handler(payload: EventPayload) {
+    let sendgrid_token_name =
+        env::var("sendgrid_token_name").unwrap_or("jaykchen@gmail.com".to_string());
+    let octocrab = get_octo(&Default);
 
     if let EventPayload::PullRequestEvent(e) = payload {
         if e.action != PullRequestEventAction::Closed {
@@ -40,7 +46,7 @@ async fn handler(login: &str, sender_email_sendgrid: &str, payload: EventPayload
 
         if pull.merge_commit_sha.is_some() || pull.commits_url.is_some() {
             let response: OctoResult<GitUser> = octocrab.get(&contributor_route, None::<&()>).await;
-            let mut contributor_email = match response {
+            let contributor_email = match response {
                 Err(_) => "".to_string(),
                 Ok(user_obj) => user_obj.email,
             };
@@ -55,7 +61,7 @@ Welcome to the {html_url} community, thank you for your contribution!"#
                 subject: String::from("Thank you for contributing to this repository"),
                 content: content,
             };
-            send_email(sender_email_sendgrid, &email_obj).expect("failed to send email");
+            send_email(&sendgrid_token_name, &email_obj).expect("failed to send email");
         }
     }
 }

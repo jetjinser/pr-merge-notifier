@@ -8,8 +8,9 @@ path = "src/pr-merge-notifier.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-github-flows = "0.4"
+github-flows = "0.5.1"
 sendgrid-flows = "0.1.2"
 tokio_wasi = { version = "1.25.1", features = ["macros", "rt"] }
 anyhow = "1"
 serde_json = "1"
+dotenv = "0.15.0"
