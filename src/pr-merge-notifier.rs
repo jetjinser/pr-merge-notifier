@@ -48,6 +48,7 @@ async fn handler(payload: EventPayload) {
 
         if pull.merge_commit_sha.is_some() || pull.commits_url.is_some() {
             let response: OctoResult<GitUser> = octocrab.get(&contributor_route, None::<&()>).await;
+            log::debug!("{:?}", response);
             let contributor_email = match response {
                 Err(_) => "".to_string(),
                 Ok(user_obj) => user_obj.email,
