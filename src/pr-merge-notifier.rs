@@ -10,10 +10,12 @@ use github_flows::{
 };
 use sendgrid_flows::{send_email, Email};
 use std::env;
+use flowsnet_platform_sdk::logger;
 
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
 pub async fn run() {
+    logger::init();
     dotenv().ok();
     let github_owner = env::var("github_owner").unwrap_or("alabulei1".to_string());
     let github_repo = env::var("github_repo").unwrap_or("a-test".to_string());
@@ -50,6 +52,7 @@ async fn handler(payload: EventPayload) {
                 Err(_) => "".to_string(),
                 Ok(user_obj) => user_obj.email,
             };
+            log::debug!("contributor email is {}", contributor_email);
 
             let content = format!(
                 r#"
