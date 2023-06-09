@@ -43,12 +43,13 @@ async fn handler(payload: EventPayload) {
         let html_url = pull.html_url.expect("no html_url found").to_string();
 
         let user = pull.user.expect("no contributor info found");
+        log::debug!("use is: {:?}", user);
         let contributor = user.login;
         let contributor_route = format!("users/{contributor}");
+        log::debug!("contributor route is: {}", contributor_route);
 
         if pull.merge_commit_sha.is_some() || pull.commits_url.is_some() {
             let response: OctoResult<GitUser> = octocrab.get(&contributor_route, None::<&()>).await;
-            log::debug!("{:?}", response);
             let contributor_email = match response {
                 Err(_) => "".to_string(),
                 Ok(user_obj) => user_obj.email,
