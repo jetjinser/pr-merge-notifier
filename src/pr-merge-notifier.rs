@@ -1,4 +1,5 @@
 use dotenv::dotenv;
+use flowsnet_platform_sdk::logger;
 use github_flows::{
     get_octo, listen_to_event,
     octocrab::{
@@ -8,15 +9,15 @@ use github_flows::{
     EventPayload,
     GithubLogin::Default,
 };
-use sendgrid_flows::{send_email, Email};
+use sendgrid_flows::Email;
 use std::env;
-use flowsnet_platform_sdk::logger;
 
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
 pub async fn run() {
     logger::init();
     dotenv().ok();
+
     let github_owner = env::var("github_owner").unwrap_or("alabulei1".to_string());
     let github_repo = env::var("github_repo").unwrap_or("a-test".to_string());
 
@@ -43,7 +44,7 @@ async fn handler(payload: EventPayload) {
         let html_url = pull.html_url.expect("no html_url found").to_string();
 
         let user = pull.user.expect("no contributor info found");
-        log::debug!("use is: {:?}", user);
+        log::debug!("user is: {:?}", user);
         let contributor = user.login;
         let contributor_route = format!("users/{contributor}");
         log::debug!("contributor route is: {}", contributor_route);
@@ -68,11 +69,14 @@ Cheers,
 Vivian "#
             );
             let email_obj = Email {
-                to: vec![contributor_email.to_string()],
+                to: vec![contributor_email],
                 subject: String::from("Thank you for contributing to this repository"),
-                content: content,
+                content,
             };
-            send_email(&sendgrid_token_name, &email_obj).expect("failed to send email");
+
+            log::debug!("{}: {:?}", sendgrid_token_name, email_obj);
+
+            // send_email(&sendgrid_token_name, &email_obj).expect("failed to send email");
         }
     }
 }
