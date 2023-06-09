@@ -30,7 +30,7 @@ pub async fn run() {
 
 async fn handler(payload: EventPayload) {
     let sendgrid_token_name =
-        env::var("sendgrid_token_name").unwrap_or("jaykchen@gmail.com".to_string());
+        env::var("sendgrid_sender_address").unwrap_or("jaykchen@gmail.com".to_string());
     let octocrab = get_octo(&Default);
 
     if let EventPayload::PullRequestEvent(e) = payload {
