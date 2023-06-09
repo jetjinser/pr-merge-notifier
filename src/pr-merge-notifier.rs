@@ -54,7 +54,13 @@ async fn handler(payload: EventPayload) {
             let content = format!(
                 r#"
 Hi {contributor}, <br/>
-Welcome to the {html_url} community, thank you for your contribution!"#
+We would like to extend a warm welcome to the WasmEdge community, and express our gratitude for your contribution! Your efforts are greatly appreciated, and we are thrilled to have you on board. {html_url} <br/>
+Please take a moment to fill out this Google form, and we will send you some WasmEdge SWAG as a token of our appreciation for your hard work:
+https://github.com/WasmEdge/WasmEdge/issues/551 <br/>
+We also invite you to join our Discord server, where you will have the opportunity to connect with other developers and contribute to the WasmEdge community. To join, please visit:
+https://github.com/WasmEdge/WasmEdge#contact <br/>
+Cheers,
+Vivian "#
             );
             let email_obj = Email {
                 to: vec![contributor_email.to_string()],
