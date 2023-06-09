@@ -9,7 +9,6 @@ use github_flows::{
     EventPayload,
     GithubLogin::Default,
 };
-use sendgrid_flows::Email;
 use std::env;
 
 #[no_mangle]
@@ -68,15 +67,13 @@ https://github.com/WasmEdge/WasmEdge#contact <br/>
 Cheers,
 Vivian "#
             );
-            let email_obj = Email {
-                to: vec![contributor_email],
-                subject: String::from("Thank you for contributing to this repository"),
-                content,
-            };
+            let email_obj = serde_json::json!({
+                "to": vec![contributor_email],
+                "subject": String::from("Thank you for contributing to this repository"),
+                "content": content
+            });
 
             log::debug!("{}: {:?}", sendgrid_token_name, email_obj);
-
-            // send_email(&sendgrid_token_name, &email_obj).expect("failed to send email");
         }
     }
 }
